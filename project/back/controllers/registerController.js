@@ -1,35 +1,62 @@
-const usersDB = {
-    users: require('../model/users.json'),
-    setUsers: function (data) { this.users = data }
-}
-const fsPromises = require('fs').promises;
-const path = require('path');
+const userModel = require('../model/userModel');
+const etudiantModel = require('../model/etudiantModel');
+const enseignantModel = require('../model/enseignantModel');
 const bcrypt = require('bcrypt');
 
 const handleNewUser = async (req, res) => {
-    const { user, pwd } = req.body;
-    if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
-    // check for duplicate usernames in the db
-    const duplicate = usersDB.users.find(person => person.username === user);
-    if (duplicate) return res.sendStatus(409); //Conflict 
+    const { nom, prenom, dateNaissance, email, motDePasse, userType, specialite, annee, grade } = req.body;
+
+    if (!nom || !prenom || !email || !motDePasse) {
+        return res.status(400).json({ 'message': 'All required fields must be provided.' });
+    }
+
+    if (userType === 'etudiant' && (!specialite || !annee)) {
+        return res.status(400).json({ 'message': 'Specialite and Annee are required for students.' });
+    }
+
+    if (userType === 'enseignant' && (!specialite || !grade)) {
+        return res.status(400).json({ 'message': 'Specialite and Grade are required for teachers.' });
+    }
+
     try {
-        //encrypt the password
-        const hashedPwd = await bcrypt.hash(pwd, 10);
-        //store the new user
-        const newUser = {
-            "username": user,
-            "roles": { "User": 2001 },
-            "password": hashedPwd
-        };
-        usersDB.setUsers([...usersDB.users, newUser]);
-        await fsPromises.writeFile(
-            path.join(__dirname, '..', 'model', 'users.json'),
-            JSON.stringify(usersDB.users)
-        );
-        console.log(usersDB.users);
-        res.status(201).json({ 'success': `New user ${user} created!` });
+        const duplicate = await userModel.findByEmail(email);
+        if (duplicate) {
+            return res.status(409).json({ 'error': 'Email already exists.' });
+        }
+
+        const hashedPwd = await bcrypt.hash(motDePasse, 10);
+        const nextId = await userModel.getNextId();
+
+        const newUser = await userModel.create({
+            idUser: nextId,
+            nom,
+            prenom,
+            dateNaissance,
+            email,
+            motDePasse: hashedPwd
+        });
+
+        if (userType === 'etudiant') {
+            await etudiantModel.create({
+                idUser: nextId,
+                specialite,
+                annee: parseInt(annee)
+            });
+        } else if (userType === 'enseignant') {
+            await enseignantModel.create({
+                idUser: nextId,
+                specialite,
+                grade
+            });
+        }
+
+        res.status(201).json({
+            'success': true,
+            'message': `New user ${prenom} ${nom} created!`
+        });
     } catch (err) {
-        res.status(500).json({ 'message': err.message });
+        console.error('Registration error:', err);
+        res.status(500).json({ 'error': err.message });
     }
 }
 

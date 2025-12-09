@@ -8,7 +8,7 @@ const errorHandler = require('./middleware/errorHandler');
 const verifyJWT = require('./middleware/verifyJWT');
 const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
-const PORT = process.env.PORT || 3500;
+const PORT = process.env.PORT || 5000;
 
 // custom middleware logger
 app.use(logger);
@@ -23,7 +23,7 @@ app.use(cors(corsOptions));
 // built-in middleware to handle urlencoded form data
 app.use(express.urlencoded({ extended: false }));
 
-// built-in middleware for json 
+// built-in middleware for json
 app.use(express.json());
 
 //middleware for cookies
@@ -38,6 +38,7 @@ app.use('/register', require('./routes/register'));
 app.use('/auth', require('./routes/auth'));
 app.use('/refresh', require('./routes/refresh'));
 app.use('/logout', require('./routes/logout'));
+app.use('/api', require('./routes/api'));
 
 app.use(verifyJWT);
 app.use('/employees', require('./routes/api/employees'));
