@@ -65,17 +65,19 @@ const Signup = () => {
     setLoading(true);
 
     try {
+      const { confirmPassword, ...signupData } = formData;
       const response = await fetch("http://localhost:5000/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(signupData),
       });
       const data = await response.json();
       if (data.success) {
-        alert("🎉 Inscription réussie !");
+        alert("Inscription réussie ! Vous pouvez maintenant vous connecter.");
         navigate("/login");
-      } else alert(data.error);
-    } catch {
+      } else alert(data.error || "Erreur lors de l'inscription");
+    } catch (error) {
+      console.error("Signup error:", error);
       alert("Erreur de connexion au serveur");
     } finally {
       setLoading(false);

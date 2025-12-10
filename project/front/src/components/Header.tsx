@@ -1,10 +1,13 @@
-import { Code2, Menu, X } from "lucide-react";
+import { Code2, Menu, X, LogOut } from "lucide-react";
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const isActive = (path:String) => location.pathname === path;
 
@@ -51,21 +54,55 @@ export default function Header() {
             ))}
           </div>
 
-          {/* BOUTON PROFIL */}
-          <Link
-            to="/profile"
-            className={`
-              px-5 py-2 rounded-lg font-semibold transition-all
-              border border-gray-300
-              ${
-                isActive("/profile")
-                  ? "bg-green-600 text-white" // reste vert
-                  : "bg-white hover:bg-green-600 hover:text-white"
-              }
-            `}
-          >
-            Mon Profil
-          </Link>
+          {/* AUTH BUTTONS */}
+          <div className="flex items-center space-x-2">
+            {isAuthenticated && user ? (
+              <>
+                <span className="text-sm font-medium text-gray-700 hidden sm:inline">
+                  {user.Prenom} {user.Nom}
+                </span>
+                <Link
+                  to="/profile"
+                  className={`
+                    px-5 py-2 rounded-lg font-semibold transition-all
+                    border border-gray-300
+                    ${
+                      isActive("/profile")
+                        ? "bg-green-600 text-white"
+                        : "bg-white hover:bg-green-600 hover:text-white"
+                    }
+                  `}
+                >
+                  Mon Profil
+                </Link>
+                <button
+                  onClick={async () => {
+                    await logout();
+                    navigate("/login");
+                  }}
+                  className="px-5 py-2 rounded-lg font-semibold bg-red-600 text-white hover:bg-red-700 transition-all flex items-center space-x-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span className="hidden sm:inline">Déconnexion</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="px-5 py-2 rounded-lg font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all"
+                >
+                  Se connecter
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-5 py-2 rounded-lg font-semibold border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition-all"
+                >
+                  S'inscrire
+                </Link>
+              </>
+            )}
+          </div>
 
           {/* MENU MOBILE */}
           <button
@@ -94,20 +131,57 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* PROFIL MOBILE */}
-            <Link
-              to="/profile"
-              onClick={() => setIsMenuOpen(false)}
-              className={`block text-center px-4 py-3 rounded-lg font-semibold border
-                ${
-                  isActive("/profile")
-                    ? "bg-green-600 text-white"
-                    : "bg-white border-gray-300 hover:bg-green-600 hover:text-white"
-                }
-              `}
-            >
-              Mon Profil
-            </Link>
+            {/* AUTH BUTTONS MOBILE */}
+            {isAuthenticated && user ? (
+              <>
+                <div className="px-4 py-3 bg-gray-100 rounded-lg">
+                  <p className="text-sm font-medium text-gray-700">
+                    {user.Prenom} {user.Nom}
+                  </p>
+                </div>
+                <Link
+                  to="/profile"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block text-center px-4 py-3 rounded-lg font-semibold border
+                    ${
+                      isActive("/profile")
+                        ? "bg-green-600 text-white"
+                        : "bg-white border-gray-300 hover:bg-green-600 hover:text-white"
+                    }
+                  `}
+                >
+                  Mon Profil
+                </Link>
+                <button
+                  onClick={async () => {
+                    setIsMenuOpen(false);
+                    await logout();
+                    navigate("/login");
+                  }}
+                  className="w-full px-4 py-3 rounded-lg font-semibold bg-red-600 text-white hover:bg-red-700 transition-all flex items-center justify-center space-x-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Déconnexion</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-center px-4 py-3 rounded-lg font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all"
+                >
+                  Se connecter
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-center px-4 py-3 rounded-lg font-semibold border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition-all"
+                >
+                  S'inscrire
+                </Link>
+              </>
+            )}
           </div>
         )}
       </nav>

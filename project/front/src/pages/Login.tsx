@@ -1,5 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -8,41 +9,29 @@ const Login = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError("");
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-      //  localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        // Redirection selon le rôle
-        if (data.user.role === "etudiant") navigate("/");
-        else navigate("/");
-      } else {
-        alert(data.error);
-      }
-    } catch (error) {
-      console.error("Erreur:", error);
-      alert("Erreur de connexion au serveur");
+      await login(formData.email, formData.motDePasse);
+      navigate("/");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Erreur de connexion au serveur";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -57,7 +46,12 @@ const Login = () => {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email */}
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md text-sm">
+              {error}
+            </div>
+          )}
+
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               Adresse Email
@@ -73,7 +67,6 @@ const Login = () => {
             />
           </div>
 
-          {/* Mot de passe */}
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               Mot de passe
@@ -89,11 +82,10 @@ const Login = () => {
             />
           </div>
 
-          {/* Bouton */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white p-2 rounded-md font-semibold hover:bg-indigo-700 transition"
+            className="w-full bg-indigo-600 text-white p-2 rounded-md font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
           >
             {loading ? "Connexion en cours..." : "Se connecter"}
           </button>
