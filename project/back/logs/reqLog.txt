@@ -17,3 +17,7 @@
 20251219	13:30:47	689e8556-0f09-4f7c-9e78-af22678e2224	GET	http://localhost:5000	/css/style.css
 20251219	13:41:42	cdc1147d-7eee-48af-9a6b-2299802082aa	GET	http://localhost:5000	/
 20251219	13:41:42	9839e29f-f6bc-4688-a5be-b16da81932ac	GET	http://localhost:5000	/css/style.css
+20251219	13:47:18	1ba30eda-7669-4821-9fcf-4664f37e3bf4	GET	http://localhost:5000	/
+20251219	13:47:18	180343ba-d8f3-474c-b7ba-d5a2ae2b21ab	GET	http://localhost:5000	/
+20251219	13:47:18	0a3c64fc-e93d-4fa9-8e0e-0c5a0fe73fce	GET	http://localhost:5000	/css/style.css
+20251219	13:47:18	68fb65fc-f5cb-44e5-b597-8b3ef6369f9c	GET	http://localhost:5000	/css/style.css
