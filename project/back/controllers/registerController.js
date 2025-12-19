@@ -1,7 +1,7 @@
 const userModel = require('../model/userModel');
 const etudiantModel = require('../model/etudiantModel');
 const enseignantModel = require('../model/enseignantModel');
-const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs');
 
 const handleNewUser = async (req, res) => {
     const { nom, prenom, dateNaissance, email, motDePasse, userType, specialite, annee, grade } = req.body;
@@ -24,7 +24,7 @@ const handleNewUser = async (req, res) => {
             return res.status(409).json({ 'error': 'Email already exists.' });
         }
 
-        const hashedPwd = await bcrypt.hash(motDePasse, 10);
+        const hashedPwd = await bcryptjs.hash(motDePasse, 10);
         const nextId = await userModel.getNextId();
 
         const newUser = await userModel.create({
