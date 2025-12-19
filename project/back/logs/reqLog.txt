@@ -123,3 +123,5 @@
 20251219	19:44:07	1e946471-d08c-4962-a7d1-0893968c3a07	GET	http://localhost:5000	/css/style.css
 20251219	19:45:42	81edd130-a3af-4b3f-94c2-f253ebafe895	GET	http://localhost:5000	/
 20251219	19:45:42	46223fc1-120a-443f-9729-4a5ed6212fa7	GET	http://localhost:5000	/css/style.css
+20251219	19:46:49	f0bcb801-ef26-46b2-ae8d-00cf9f5c161b	GET	http://localhost:5000	/
+20251219	19:46:49	5feeacbb-70c8-411d-b68f-f46bc7a72682	GET	http://localhost:5000	/css/style.css
