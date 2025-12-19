@@ -11,3 +11,5 @@
 20211011	17:49:24	2b74f46b-65d3-4041-9c87-65e0982d46ad	POST	undefined	/auth
 20211011	17:49:38	32899fb9-23b8-49fc-95ac-631462d7174c	POST	undefined	/employees
 20211011	17:49:44	df0482cf-3962-4078-9a8e-b4712e1d8658	DELETE	undefined	/employees
+20251219	13:18:30	36536354-f7c0-4d9f-8c24-bd9dcb3530ea	GET	http://localhost:5000	/
+20251219	13:18:30	ee45db3a-e285-4774-bee0-58962dc3cae3	GET	http://localhost:5000	/css/style.css
