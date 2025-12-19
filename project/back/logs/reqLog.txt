@@ -13,3 +13,5 @@
 20211011	17:49:44	df0482cf-3962-4078-9a8e-b4712e1d8658	DELETE	undefined	/employees
 20251219	13:18:30	36536354-f7c0-4d9f-8c24-bd9dcb3530ea	GET	http://localhost:5000	/
 20251219	13:18:30	ee45db3a-e285-4774-bee0-58962dc3cae3	GET	http://localhost:5000	/css/style.css
+20251219	13:30:47	b078219a-008f-4426-a28f-409dce4bfa8d	GET	http://localhost:5000	/
+20251219	13:30:47	689e8556-0f09-4f7c-9e78-af22678e2224	GET	http://localhost:5000	/css/style.css
