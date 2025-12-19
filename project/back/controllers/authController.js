@@ -1,7 +1,7 @@
 const userModel = require('../model/userModel');
 const etudiantModel = require('../model/etudiantModel');
 const enseignantModel = require('../model/enseignantModel');
-const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -18,7 +18,7 @@ const handleLogin = async (req, res) => {
             return res.status(401).json({ 'error': 'Invalid credentials.' });
         }
 
-        const match = await bcrypt.compare(motDePasse, foundUser.motDePasse);
+        const match = await bcryptjs.compare(motDePasse, foundUser.motDePasse);
         if (!match) {
             return res.status(401).json({ 'error': 'Invalid credentials.' });
         }
